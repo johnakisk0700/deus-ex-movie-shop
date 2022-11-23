@@ -17,9 +17,11 @@ import { useAuth } from "../../context/AuthProvider";
 import { useAuthAutoRequest } from "../../hooks/useAuthAutoRequest";
 import { useAuthRequest } from "../../hooks/useAuthRequest";
 import { usePagination } from "../../hooks/usePagination";
+import CategoriesSelect, { ICategory } from "./CategoriesSelect";
 import Movie, { IMovie } from "./Movie";
 import MovieInfoModal from "./MovieInfoModal";
 import MovieRentModal from "./MovieRentModal";
+import { RentToastRenderer } from "./RentToastRenderer";
 
 interface MoviesResponse {
   count: number;
@@ -38,13 +40,22 @@ function Movies() {
   const toast = useToast();
 
   const { page, page_size, setPage } = usePagination();
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+
+  const handleChangeCategory = (category: ICategory) => {
+    setSelectedCategory(category);
+    setPage(1);
+  };
+
   const {
     data: moviesRes,
     loading,
     error,
   } = useAuthAutoRequest<MoviesResponse>(
     "GET",
-    `rent-store/movies?page=${page}&page_size=${page_size}`
+    `rent-store/movies?page=${page}&page_size=${page_size}${
+      selectedCategory?.name ? `&category=${selectedCategory.name}` : ""
+    }`
   );
   const movies = moviesRes?.results;
   const count = moviesRes?.count;
@@ -91,9 +102,14 @@ function Movies() {
       onCloseInfo();
       onCloseRent();
       toast({
-        status: "success",
-        title: `Successfuly rented: ${data?.movie}`,
-        position: "top",
+        position: "top-right",
+        render: () =>
+          selectedMovie && <RentToastRenderer movie={selectedMovie} />,
+        duration: 2500,
+        containerStyle: {
+          maxWidth: "100vw",
+          minWidth: "150px",
+        },
       });
     },
     (err) => {}
@@ -101,11 +117,15 @@ function Movies() {
 
   return (
     <>
+      <Heading as="h1">Movies</Heading>
       <Flex align="center" justify="space-between" my={6}>
-        <Heading as="h1">Movies</Heading>
+        <CategoriesSelect
+          selectedCategory={selectedCategory}
+          handleChangeCategory={handleChangeCategory}
+        />
         {count && (
           <PaginationButtons
-            pages={Math.round(count / page_size)}
+            pages={Math.ceil(count / page_size)}
             currentPage={page}
             setPage={setPage}
           />
@@ -140,7 +160,11 @@ function Movies() {
             ))
           : null}
       </Grid>
-      <Box my={8} ml="auto" width="max-content">
+      <Flex align="center" justify="space-between" my={6}>
+        <CategoriesSelect
+          selectedCategory={selectedCategory}
+          handleChangeCategory={handleChangeCategory}
+        />
         {count && (
           <PaginationButtons
             pages={Math.ceil(count / page_size)}
@@ -148,7 +172,7 @@ function Movies() {
             setPage={setPage}
           />
         )}
-      </Box>
+      </Flex>
       <MovieInfoModal
         isOpen={isOpenInfo}
         onOpen={onOpenInfo}

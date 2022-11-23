@@ -8,7 +8,7 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
-import RequireAuth from "./routes/Auth/RequireAuth";
+import AuthGuard from "./routes/Auth/AuthGuard";
 import HomePage from "./routes/Home";
 import Layout from "./routes/Layout";
 import LoginPage from "./routes/Login";
@@ -23,17 +23,25 @@ function App() {
           <Route
             path="/"
             element={
-              <RequireAuth>
+              <AuthGuard>
                 <HomePage />
-              </RequireAuth>
+              </AuthGuard>
             }
           />
           <Route
             path="/profile"
             element={
-              <RequireAuth>
+              <AuthGuard>
                 <ProfilePage />
-              </RequireAuth>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AuthGuard adminRoute={true}>
+                <ProfilePage />
+              </AuthGuard>
             }
           />
         </Route>
