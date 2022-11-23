@@ -17,6 +17,7 @@ import {
   Flex,
   useColorModeValue,
   Progress,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuthAutoRequest } from "../../hooks/useAuthAutoRequest";
@@ -51,6 +52,7 @@ interface ReturnResponse {
 }
 
 function RentalsTable({}: Props) {
+  const toast = useToast();
   // Rentals table logic
   const { page_size, page, setPage } = usePagination();
   const {
@@ -83,9 +85,9 @@ function RentalsTable({}: Props) {
       refreshProfile();
       refetchRentals();
       onClose();
-      Toast({
+      toast({
         status: "success",
-        title: `Successfuly returned: ${data?.movie}`,
+        title: `Successfuly returned: ${selectedReturn?.movie}`,
         position: "top",
       });
     },
@@ -136,6 +138,7 @@ function RentalsTable({}: Props) {
                         variant="solid"
                         colorScheme="blue"
                         onClick={() => handleReturn(rental)}
+                        isDisabled={rental.is_paid}
                       >
                         <RepeatIcon />
                       </Button>
