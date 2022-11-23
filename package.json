@@ -1,0 +1,39 @@
+{
+  "name": "deus-ex-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "why": "yarn --cwd proxy start"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.12",
+    "@chakra-ui/react": "^2.4.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "axios": "^1.2.0",
+    "formik": "^2.2.9",
+    "framer-motion": "^7.6.7",
+    "http-proxy": "^1.18.1",
+    "jwt-decode": "^3.1.2",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.6.0",
+    "react-router-dom": "^6.4.3",
+    "sort-by": "^1.2.0",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/http-proxy": "^1.17.9",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@vitejs/plugin-react": "^2.2.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3"
+  }
+}
