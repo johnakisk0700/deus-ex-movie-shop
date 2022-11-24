@@ -71,7 +71,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const parsedUser = savedUser && JSON.parse(savedUser);
     if (parsedUser) {
       setUser(parsedUser);
-      navigate(from, { replace: true });
+      const initialFrom = location.pathname || "/";
+      navigate(initialFrom, { replace: true });
     }
     initialCheck.current = false;
   }, []);
