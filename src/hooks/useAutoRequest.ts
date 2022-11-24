@@ -6,7 +6,7 @@ import { axiosInstance, privateAxiosInstance } from "../api/axios";
 import { useAuth } from "../context/AuthProvider";
 import { useRefresh } from "../context/RefreshTokenProvider";
 
-export const useAuthAutoRequest = <TData>(
+export const useAutoRequest = <TData>(
   method: "GET" | "POST" | "PATCH",
   url: string,
   postData?: object
@@ -49,10 +49,11 @@ export const useAuthAutoRequest = <TData>(
       } catch (error: any) {
         console.log(
           "[REQUEST ERROR]: \n",
-          `msg: ${error?.message} \n url: ${error?.config?.url}`
+          `msg: ${error?.message} \n 
+           url: ${error?.config?.url}`
         );
-        if (error?.message !== "canceled") {
-          // then user probably must log in again
+        if (error?.config?.status === 401) {
+          // double 401 means that refresh token expired as well
           localStorage.removeItem("user");
           setUser(null);
           navigate("/login", { state: { from: location } });

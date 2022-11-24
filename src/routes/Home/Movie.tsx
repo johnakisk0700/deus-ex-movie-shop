@@ -1,6 +1,5 @@
 import { TimeIcon, CalendarIcon, StarIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   ButtonGroup,
   Card,
@@ -16,8 +15,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
-import { useAuthRequest } from "../../hooks/useAuthRequest";
 
 export interface IMovie {
   uuid: string;

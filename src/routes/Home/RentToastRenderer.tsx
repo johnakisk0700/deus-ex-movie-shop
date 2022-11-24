@@ -38,7 +38,7 @@ export const RentToastRenderer = ({ movie }: Props) => {
         gap={2}
         mx="auto"
       >
-        Success! <CheckIcon color="green.300" fontSize="xl" />
+        Thank you <br /> for your purchase!
       </Text>
       <Flex
         flexDir="column"
@@ -60,7 +60,9 @@ export const RentToastRenderer = ({ movie }: Props) => {
           p={1}
           borderRadius={styleConstants.borderRadius}
         >
-          <Text fontSize="sm">Price:</Text>
+          <Text fontSize="sm" mr={4}>
+            Price:
+          </Text>
           <Text fontWeight="bold">
             <Text as="span" fontSize="xs" fontStyle="italic" fontWeight="200">
               (on return){" "}

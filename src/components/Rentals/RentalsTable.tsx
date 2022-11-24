@@ -18,10 +18,13 @@ import {
   useColorModeValue,
   Progress,
   useToast,
+  Switch,
+  Text,
+  Select,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useAuthAutoRequest } from "../../hooks/useAuthAutoRequest";
-import { useAuthRequest } from "../../hooks/useAuthRequest";
+import { useMemo, useState } from "react";
+import { useAutoRequest } from "../../hooks/useAutoRequest";
+import { useRequest } from "../../hooks/useRequest";
 import { usePagination } from "../../hooks/usePagination";
 import { useProfile } from "../../hooks/useProfile";
 import { IMovie } from "../../routes/Home/Movie";
@@ -51,21 +54,35 @@ interface ReturnResponse {
   movie: IMovie;
 }
 
+type SortProperties = "rental_date" | "movie" | "is_paid";
+const sortOptions = {
+  rental_date: "Rental Date",
+  movie: "Name",
+  is_paid: "Currently Active",
+};
+
 function RentalsTable({}: Props) {
   const toast = useToast();
+
   // Rentals table logic
   const { page_size, page, setPage } = usePagination();
+  const [orderBy, setOrderBy] = useState<SortProperties>("movie");
+  const [onlyActive, setOnlyActive] = useState<boolean>(false);
   const {
     data: rentalsRes,
     loading,
     error,
     refetch: refetchRentals,
-  } = useAuthAutoRequest<RentalResponse>(
+  } = useAutoRequest<RentalResponse>(
     "GET",
-    `rent-store/rentals?page=${page}&page_size=${page_size}`
+    `rent-store/rentals?page=${page}&page_size=${page_size}` +
+      (onlyActive ? "&only-active=true" : "")
   );
   const count = rentalsRes?.count;
-  const rentals = rentalsRes?.results;
+  const orderedRentals = useMemo(
+    () => rentalsRes?.results?.sort((a, b) => Number(a[orderBy] > b[orderBy])),
+    [orderBy, rentalsRes]
+  );
 
   // Return modal & logic
   const [selectedReturn, setSelectedReturn] = useState<IRental>();
@@ -75,7 +92,7 @@ function RentalsTable({}: Props) {
     request,
     data,
     loading: loadingReturn,
-  } = useAuthRequest<ReturnResponse>(
+  } = useRequest<ReturnResponse>(
     "PATCH",
     `/rent-store/rentals/${selectedReturn?.uuid}`,
     {
@@ -103,7 +120,28 @@ function RentalsTable({}: Props) {
 
   return (
     <>
-      <Flex justify="flex-end" my={6}>
+      <Flex justify="space-between" my={6}>
+        <Flex align="center" gap={2}>
+          <Select
+            value={orderBy}
+            onChange={(e) => setOrderBy(e.target.value as SortProperties)}
+          >
+            {Object.keys(sortOptions).map((key) => (
+              <option value={key} key={key}>
+                {sortOptions[key as keyof typeof sortOptions]}
+              </option>
+            ))}
+          </Select>
+          <Switch
+            value={onlyActive ? "true" : "false"}
+            onChange={() => {
+              setPage(1);
+              setOnlyActive((prev) => !prev);
+            }}
+          />
+          <Text>Active Only</Text>
+        </Flex>
+
         {count && (
           <PaginationButtons
             currentPage={page}
@@ -124,9 +162,9 @@ function RentalsTable({}: Props) {
             </Tr>
           </Thead>
           <Tbody>
-            {!loading && rentals
-              ? rentals.map((rental) => (
-                  <Tr key={rental.movie} _hover={{ bg: tdHover }}>
+            {!loading && orderedRentals
+              ? orderedRentals.map((rental, i) => (
+                  <Tr key={i} _hover={{ bg: tdHover }}>
                     <Td>{rental.movie}</Td>
                     <Td isNumeric>{rental.rental_date}</Td>
                     <Td isNumeric>

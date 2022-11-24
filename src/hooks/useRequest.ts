@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { useRefresh } from "../context/RefreshTokenProvider";
 
-export const useAuthRequest = <TData>(
+export const useRequest = <TData>(
   method: "GET" | "POST" | "PATCH",
   url: string,
   postData?: object,
