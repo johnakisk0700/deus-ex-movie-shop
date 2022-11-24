@@ -1,6 +1,15 @@
-import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React from "react";
 import { FaUserAlt } from "react-icons/fa";
+import AddCreditsModal from "../../components/Modals/AddCreditsModal";
 import { useAuth } from "../../context/AuthProvider";
 import { styleConstants } from "../../theme/constants";
 
@@ -9,6 +18,9 @@ type Props = {};
 function ProfileCard({}: Props) {
   const { user } = useAuth();
   const profile = user?.profile;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const bg = useColorModeValue("blackAlpha.200", "whiteAlpha.100");
   const userIconBg = useColorModeValue("white", "black");
   return (
@@ -60,6 +72,10 @@ function ProfileCard({}: Props) {
           </Text>
         </Text>
       </Stack>
+      <Button mt="auto" colorScheme="green" onClick={() => onOpen()}>
+        Add Credits
+      </Button>
+      <AddCreditsModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 }

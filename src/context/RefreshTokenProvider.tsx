@@ -28,7 +28,6 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
     // Mount the token on each authenticated request
     const reqInterceptor = privateAxiosInstance.interceptors.request.use(
       function (config) {
-        console.log("intercepted something lol");
         const accessToken = user?.tokens.access;
         if (accessToken && !config?.headers?.Authorization) {
           config.headers = {

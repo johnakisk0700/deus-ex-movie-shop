@@ -1,5 +1,5 @@
 import { CircularProgress, Select } from "@chakra-ui/react";
-import { useAuthAutoRequest } from "../../hooks/useAuthAutoRequest";
+import { useAutoRequest } from "../../hooks/useAutoRequest";
 
 export interface ICategory {
   name: string;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 function CategoriesSelect({ selectedCategory, handleChangeCategory }: Props) {
-  const { data, loading, error } = useAuthAutoRequest<ICategory[]>(
+  const { data, loading, error } = useAutoRequest<ICategory[]>(
     "GET",
     "/rent-store/categories/"
   );
@@ -26,7 +26,9 @@ function CategoriesSelect({ selectedCategory, handleChangeCategory }: Props) {
           value={selectedCategory?.name}
         >
           {data.map((category) => (
-            <option value={category.name}>{category.name}</option>
+            <option key={category.name} value={category.name}>
+              {category.name}
+            </option>
           ))}
         </Select>
       ) : null}
