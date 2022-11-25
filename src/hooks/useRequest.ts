@@ -49,7 +49,7 @@ export const useRequest = <TData>(
         );
         onError && onError(error);
         setLoading(false);
-        if (error?.config?.status === 401 || error?.config?.status === 403) {
+        if (error?.response?.status === 401) {
           // then user probably must log in again
           localStorage.removeItem("user");
           setUser(null);

@@ -52,7 +52,8 @@ export const useAutoRequest = <TData>(
           `msg: ${error?.message} \n 
            url: ${error?.config?.url}`
         );
-        if (error?.config?.status === 401) {
+        console.log(error);
+        if (error?.response?.status === 401) {
           // double 401 means that refresh token expired as well
           localStorage.removeItem("user");
           setUser(null);
