@@ -8,15 +8,15 @@ import { AuthProvider } from "./context/AuthProvider";
 import { RefreshTokenProvider } from "./context/RefreshTokenProvider";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <AuthProvider>
-      <RefreshTokenProvider>
-        <ChakraProvider theme={deusTheme} resetCSS={true}>
-          <App />
-        </ChakraProvider>
-      </RefreshTokenProvider>
-    </AuthProvider>
-  </BrowserRouter>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <RefreshTokenProvider>
+          <ChakraProvider theme={deusTheme} resetCSS={true}>
+            <App />
+          </ChakraProvider>
+        </RefreshTokenProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
