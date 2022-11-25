@@ -1,17 +1,14 @@
-import { useToast } from "@chakra-ui/react";
-import { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance, privateAxiosInstance } from "../api/axios";
 import { useAuth } from "../context/AuthProvider";
-import { useRefresh } from "../context/RefreshTokenProvider";
+import { useAxiosPrivate } from "./useAxiosPrivate";
 
 export const useAutoRequest = <TData>(
   method: "GET" | "POST" | "PATCH",
   url: string,
   postData?: object
 ) => {
-  const privateAxiosInstance = useRefresh();
+  const privateAxiosInstance = useAxiosPrivate();
 
   const { setUser } = useAuth();
 
@@ -47,12 +44,6 @@ export const useAutoRequest = <TData>(
           setLoading(false);
         }
       } catch (error: any) {
-        console.log(
-          "[REQUEST ERROR]: \n",
-          `msg: ${error?.message} \n 
-           url: ${error?.config?.url}`
-        );
-        console.log(error);
         if (error?.response?.status === 401) {
           // double 401 means that refresh token expired as well
           localStorage.removeItem("user");

@@ -22,7 +22,7 @@ function CategoriesSelect({
   );
   return (
     <>
-      {loading && !data ? <CircularProgress size="34px" /> : null}
+      {loading && !data ? <Select /> : null}
       {data ? (
         <Select
           placeholder="All Categories"

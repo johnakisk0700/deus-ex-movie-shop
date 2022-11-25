@@ -1,4 +1,4 @@
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
@@ -22,6 +22,7 @@ import { useState } from "react";
 import yup, { array, number, object, string } from "yup";
 import { useRequest } from "../../hooks/useRequest";
 import CategoriesSelect, { ICategory } from "../../components/CategoriesSelect";
+import { SliderControl } from "formik-chakra-ui";
 
 type Props = {};
 
@@ -118,13 +119,15 @@ function MovieForm({}: Props) {
             </FormControl>
             <FormControl isInvalid={!!errors.rating && touched.rating}>
               <FormLabel htmlFor="rating">Rating</FormLabel>
-              <Field
-                as={Input}
+              <Flex align="center" gap={2}>
+                <StarIcon />
+                {values.rating} / 10
+              </Flex>
+              <SliderControl
                 id="rating"
                 name="rating"
-                type="text"
                 variant="outline"
-                required
+                sliderProps={{ max: 10, min: 1, step: 0.1 }}
               />
               <FormErrorMessage>{errors.rating}</FormErrorMessage>
             </FormControl>
@@ -165,7 +168,6 @@ function MovieForm({}: Props) {
                               <Field
                                 as={Input}
                                 name={`categories.${index}`}
-                                type="text"
                                 display="none"
                               />
 
@@ -192,7 +194,6 @@ function MovieForm({}: Props) {
                   {errors.categories}
                 </Text>
               ) : null}
-              <FormErrorMessage></FormErrorMessage>
             </FormControl>
 
             <Button

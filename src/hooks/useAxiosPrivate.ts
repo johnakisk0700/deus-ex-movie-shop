@@ -1,17 +1,8 @@
-import axios, { AxiosInstance } from "axios";
-import { createContext, useContext, useEffect, useMemo } from "react";
-import { useAuth } from "./AuthProvider";
+import axios from "axios";
+import { useEffect, useMemo } from "react";
+import { useAuth } from "../context/AuthProvider";
 
-/**
- * This basically provides the whole application
- * with an instance of axios that intercepts
- * requests and handles token mounting and refreshing
- */
-
-let RefreshContext = createContext<AxiosInstance>(null!);
-const useRefresh = () => useContext(RefreshContext);
-
-function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
+export const useAxiosPrivate = () => {
   const { user, setUser } = useAuth();
 
   const privateAxiosInstance = useMemo(
@@ -24,7 +15,7 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
   );
 
   // Request interceptors
-  useMemo(() => {
+  useEffect(() => {
     // Mount the token on each authenticated request
     const reqInterceptor = privateAxiosInstance.interceptors.request.use(
       function (config) {
@@ -74,13 +65,12 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
         return Promise.reject(error);
       }
     );
+
+    return () => {
+      privateAxiosInstance.interceptors.request.eject(reqInterceptor);
+      privateAxiosInstance.interceptors.response.eject(resInterceptor);
+    };
   }, [user]);
 
-  let value = useMemo(() => privateAxiosInstance, []);
-
-  return (
-    <RefreshContext.Provider value={value}>{children}</RefreshContext.Provider>
-  );
-}
-
-export { RefreshTokenProvider, useRefresh };
+  return privateAxiosInstance;
+};

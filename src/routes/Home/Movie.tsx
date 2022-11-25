@@ -79,7 +79,9 @@ function Movie({
             </Flex>
             <Flex gap={1} flexWrap="wrap">
               {movie?.categories.map((category) => (
-                <Tag size="sm">{category}</Tag>
+                <Tag size="sm" key={category}>
+                  {category}
+                </Tag>
               ))}
             </Flex>
             <Text noOfLines={3}>{movie?.description}</Text>

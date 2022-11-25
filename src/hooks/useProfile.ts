@@ -1,9 +1,9 @@
 import { IProfile, useAuth } from "../context/AuthProvider";
-import { useRefresh } from "../context/RefreshTokenProvider";
+import { useAxiosPrivate } from "./useAxiosPrivate";
 
 export const useProfile = () => {
   const { setUser } = useAuth();
-  const privateAxiosInstance = useRefresh();
+  const privateAxiosInstance = useAxiosPrivate();
 
   const refreshProfile = async () => {
     try {

@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { useRefresh } from "../context/RefreshTokenProvider";
+import { useAxiosPrivate } from "./useAxiosPrivate";
 
 export const useRequest = <TData>(
   method: "GET" | "POST" | "PATCH",
@@ -11,7 +11,7 @@ export const useRequest = <TData>(
   onSuccess?: (data: TData) => void,
   onError?: (error: any) => void
 ) => {
-  const privateAxiosInstance = useRefresh();
+  const privateAxiosInstance = useAxiosPrivate();
 
   const { setUser } = useAuth();
   const [data, setData] = useState<TData>();
@@ -43,10 +43,6 @@ export const useRequest = <TData>(
           setLoading(false);
         }
       } catch (error: any) {
-        console.log(
-          "[REQUEST ERROR]: \n",
-          `msg: ${error?.message} \n url: ${error?.config?.url}`
-        );
         onError && onError(error);
         setLoading(false);
         if (error?.response?.status === 401) {

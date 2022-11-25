@@ -58,7 +58,6 @@ const useAuth = () => useContext(AuthContext);
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const initialCheck = useRef(true);
   // utility
   const toast = useToast();
   let navigate = useNavigate();
@@ -66,24 +65,18 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const from = location.state?.from?.pathname || "/";
 
   // read localStorage on init to check for saved user
-  useEffect(() => {
+  useMemo(() => {
     const savedUser = localStorage.getItem("user");
     const parsedUser = savedUser && JSON.parse(savedUser);
     if (parsedUser) {
       setUser(parsedUser);
-      const initialFrom = location.pathname || "/";
-      console.log(initialFrom);
-      navigate(initialFrom, { replace: true });
     }
-    initialCheck.current = false;
   }, []);
 
   // sync localStorage with user changes after initial check
   // for stored one
   useMemo(() => {
-    if (!initialCheck.current) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
+    localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
 
   let login = async (userCredentials: UserCredentials) => {

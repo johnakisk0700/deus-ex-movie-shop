@@ -119,7 +119,7 @@ function RentalsTable({}: Props) {
   };
 
   const tdHover = useColorModeValue("whiteAlpha.700", "black");
-  console.log(orderedRentals);
+
   return (
     <>
       <Flex justify="space-between" my={6}>
