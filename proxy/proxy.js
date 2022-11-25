@@ -3,7 +3,7 @@ var app = require("express")();
 require("dotenv").config();
 
 var cors = require("cors");
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
 app.use("/", proxy(process.env.BACKEND_URL));
 
