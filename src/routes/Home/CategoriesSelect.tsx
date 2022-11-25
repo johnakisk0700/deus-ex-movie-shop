@@ -22,7 +22,6 @@ function CategoriesSelect({ selectedCategory, handleChangeCategory }: Props) {
         <Select
           placeholder="All Categories"
           onChange={(e) => handleChangeCategory({ name: e.target.value })}
-          width="max-content"
           value={selectedCategory?.name}
         >
           {data.map((category) => (

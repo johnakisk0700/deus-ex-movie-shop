@@ -1,29 +1,34 @@
 import {
-  Box,
-  Button,
-  ButtonGroup,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
   Flex,
   Grid,
   GridItem,
   Heading,
-  Text,
   useDisclosure,
   useToast,
+  Button,
+  Stack,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
-import { axiosInstance } from "../../api/axios";
+import { useMemo, useRef, useState } from "react";
 import PaginationButtons from "../../components/Pagination/PaginationButtons";
-import { useAuth } from "../../context/AuthProvider";
-import { useAuthAutoRequest } from "../../hooks/useAuthAutoRequest";
-import { useAuthRequest } from "../../hooks/useAuthRequest";
+import { useAutoRequest } from "../../hooks/useAutoRequest";
+import { useRequest } from "../../hooks/useRequest";
 import { usePagination } from "../../hooks/usePagination";
 import CategoriesSelect, { ICategory } from "./CategoriesSelect";
 import Movie, { IMovie } from "./Movie";
 import MovieInfoModal from "./MovieInfoModal";
 import MovieRentModal from "./MovieRentModal";
 import { RentToastRenderer } from "./RentToastRenderer";
+import MovieRangeSlider from "./MovieRangeSlider";
+import { IoFilterSharp } from "react-icons/io5";
 
-interface MoviesResponse {
+export interface MoviesResponse {
   count: number;
   next: string | null;
   previous: string | null;
@@ -40,10 +45,32 @@ function Movies() {
   const toast = useToast();
 
   const { page, page_size, setPage } = usePagination();
-  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
 
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
   const handleChangeCategory = (category: ICategory) => {
     setSelectedCategory(category);
+    setPage(1);
+  };
+
+  const [ratingRange, setRatingRange] = useState<number[]>([1.0, 10.0]);
+  const [displayedRatingRange, setDisplayedRatingRange] = useState<number[]>([
+    1.0, 10.0,
+  ]);
+  const handleChangeRatingRange = (value: number[]) => {
+    setRatingRange(value);
+    setPage(1);
+  };
+
+  const [yearRange, setYearRange] = useState<number[]>([
+    1900,
+    new Date().getFullYear(),
+  ]);
+  const [displayedYearRange, setDisplayedYearRange] = useState<number[]>([
+    1900,
+    new Date().getFullYear(),
+  ]);
+  const handleChangeYearRange = (value: number[]) => {
+    setYearRange(value);
     setPage(1);
   };
 
@@ -51,17 +78,20 @@ function Movies() {
     data: moviesRes,
     loading,
     error,
-  } = useAuthAutoRequest<MoviesResponse>(
+  } = useAutoRequest<MoviesResponse>(
     "GET",
-    `rent-store/movies?page=${page}&page_size=${page_size}${
-      selectedCategory?.name ? `&category=${selectedCategory.name}` : ""
-    }`
+    `rent-store/movies?page=${page}&page_size=${page_size}&from-rating=${
+      ratingRange[0]
+    }&to-rating=${ratingRange[1]}
+    &from-year=${yearRange[0]}&to-year=${yearRange[1]}
+    ${selectedCategory?.name ? `&category=${selectedCategory.name}` : ""}
+    `
   );
   const movies = moviesRes?.results;
   const count = moviesRes?.count;
 
   // used for skeletons
-  const fakeMovieArr = useMemo(() => Array(20).fill(0), []);
+  const fakeMovieArr = useMemo(() => Array(12).fill(0), []);
 
   // Info Modal
   const {
@@ -92,7 +122,7 @@ function Movies() {
     request,
     data,
     loading: loadingRent,
-  } = useAuthRequest<RentResponse>(
+  } = useRequest<RentResponse>(
     "POST",
     "/rent-store/rentals/",
     {
@@ -119,17 +149,43 @@ function Movies() {
     <>
       <Heading as="h1">Movies</Heading>
       <Flex align="center" justify="space-between" my={6}>
-        <CategoriesSelect
-          selectedCategory={selectedCategory}
-          handleChangeCategory={handleChangeCategory}
-        />
-        {count && (
+        <FiltersDrawer>
+          <Stack gap={4}>
+            <CategoriesSelect
+              selectedCategory={selectedCategory}
+              handleChangeCategory={handleChangeCategory}
+            />
+            {/* Rating Range Slider */}
+            <MovieRangeSlider
+              displayedRange={displayedRatingRange}
+              setDisplayedRange={setDisplayedRatingRange}
+              actualRange={ratingRange}
+              handleChangeOnEnd={handleChangeRatingRange}
+              min={1}
+              max={10}
+              step={0.1}
+              title={"Rating"}
+            />
+            {/* Year Range Slider */}
+            <MovieRangeSlider
+              displayedRange={displayedYearRange}
+              setDisplayedRange={setDisplayedYearRange}
+              actualRange={yearRange}
+              handleChangeOnEnd={handleChangeYearRange}
+              min={1900}
+              max={new Date().getFullYear()}
+              step={1}
+              title={"Year of Release"}
+            />
+          </Stack>
+        </FiltersDrawer>
+        {count ? (
           <PaginationButtons
             pages={Math.ceil(count / page_size)}
             currentPage={page}
             setPage={setPage}
           />
-        )}
+        ) : null}
       </Flex>
       <Grid
         gridTemplateColumns={{
@@ -161,17 +217,43 @@ function Movies() {
           : null}
       </Grid>
       <Flex align="center" justify="space-between" my={6}>
-        <CategoriesSelect
-          selectedCategory={selectedCategory}
-          handleChangeCategory={handleChangeCategory}
-        />
-        {count && (
+        <FiltersDrawer>
+          <Stack gap={4}>
+            <CategoriesSelect
+              selectedCategory={selectedCategory}
+              handleChangeCategory={handleChangeCategory}
+            />
+            {/* Rating Range Slider */}
+            <MovieRangeSlider
+              displayedRange={displayedRatingRange}
+              setDisplayedRange={setDisplayedRatingRange}
+              actualRange={ratingRange}
+              handleChangeOnEnd={handleChangeRatingRange}
+              min={1}
+              max={10}
+              step={0.1}
+              title={"Rating"}
+            />
+            {/* Year Range Slider */}
+            <MovieRangeSlider
+              displayedRange={displayedYearRange}
+              setDisplayedRange={setDisplayedYearRange}
+              actualRange={yearRange}
+              handleChangeOnEnd={handleChangeYearRange}
+              min={1900}
+              max={new Date().getFullYear()}
+              step={1}
+              title={"Year of Release"}
+            />
+          </Stack>
+        </FiltersDrawer>
+        {count ? (
           <PaginationButtons
             pages={Math.ceil(count / page_size)}
             currentPage={page}
             setPage={setPage}
           />
-        )}
+        ) : null}
       </Flex>
       <MovieInfoModal
         isOpen={isOpenInfo}
@@ -188,6 +270,46 @@ function Movies() {
         request={request}
         loading={loadingRent}
       />
+    </>
+  );
+}
+
+function FiltersDrawer({ children }: { children: JSX.Element }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef(null);
+
+  return (
+    <>
+      <Button
+        ref={btnRef}
+        colorScheme="blackAlpha"
+        onClick={onOpen}
+        variant="ghost"
+        gap={1}
+      >
+        <IoFilterSharp size="20px" />
+        Filters
+      </Button>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Filters</DrawerHeader>
+
+          <DrawerBody>{children}</DrawerBody>
+
+          <DrawerFooter>
+            <Button variant="outline" mr={3} onClick={onClose}>
+              Back
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
