@@ -20,7 +20,7 @@ import PaginationButtons from "../../components/Pagination/PaginationButtons";
 import { useAutoRequest } from "../../hooks/useAutoRequest";
 import { useRequest } from "../../hooks/useRequest";
 import { usePagination } from "../../hooks/usePagination";
-import CategoriesSelect, { ICategory } from "./CategoriesSelect";
+import CategoriesSelect, { ICategory } from "../../components/CategoriesSelect";
 import Movie, { IMovie } from "./Movie";
 import MovieInfoModal from "./MovieInfoModal";
 import MovieRentModal from "./MovieRentModal";
@@ -280,13 +280,7 @@ function FiltersDrawer({ children }: { children: JSX.Element }) {
 
   return (
     <>
-      <Button
-        ref={btnRef}
-        colorScheme="blackAlpha"
-        onClick={onOpen}
-        variant="ghost"
-        gap={1}
-      >
+      <Button ref={btnRef} onClick={onOpen} variant="ghost" gap={1}>
         <IoFilterSharp size="20px" />
         Filters
       </Button>

@@ -1,13 +1,5 @@
-import { useState } from "react";
-import {
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-  useLocation,
-  Navigate,
-  Outlet,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import AdminPage from "./routes/Admin";
 import AuthGuard from "./routes/Auth/AuthGuard";
 import HomePage from "./routes/Home";
 import Layout from "./routes/Layout";
@@ -40,7 +32,7 @@ function App() {
             path="/admin"
             element={
               <AuthGuard adminRoute={true}>
-                <ProfilePage />
+                <AdminPage />
               </AuthGuard>
             }
           />
