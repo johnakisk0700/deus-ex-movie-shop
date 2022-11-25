@@ -17,7 +17,7 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
   const privateAxiosInstance = useMemo(
     () =>
       axios.create({
-        baseURL: "http://localhost:5050",
+        baseURL: import.meta.env.VITE_PROXY_URL,
         withCredentials: true,
       }),
     []
