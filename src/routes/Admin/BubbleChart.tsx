@@ -17,7 +17,7 @@ type Props = {};
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
 
 function BubbleChart({}: Props) {
-  const { page, page_size, setPage_Size } = usePagination();
+  const { page, page_size, setPage_Size } = usePagination(1);
   const { data, loading } = useAutoRequest<MoviesResponse>(
     "GET",
     `/rent-store/movies/?page=${page}&page_size=${page_size}`
@@ -54,7 +54,7 @@ function BubbleChart({}: Props) {
             label: "Movies By Year ( Scaled x8 for visibility )",
             data: Object.keys(moviesPerYear).map((year) => ({
               x: year,
-              y: moviesPerYear[year],
+              y: 0,
               r: moviesPerYear[year] * 8,
             })),
             backgroundColor: "rgba(196, 198, 112, 0.81)",

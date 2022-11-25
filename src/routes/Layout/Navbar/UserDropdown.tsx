@@ -31,8 +31,10 @@ function UserDropdown() {
         {user?.is_admin ? (
           <MenuGroup title="Admin">
             <MenuItem>Administration</MenuItem>
+            <MenuDivider />
           </MenuGroup>
         ) : null}
+
         <MenuGroup title={first_name ? first_name : email}>
           <Link to="/profile">
             <MenuItem>Profile</MenuItem>
