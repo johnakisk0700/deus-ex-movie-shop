@@ -34,8 +34,14 @@ function BubbleChart({}: Props) {
   }, [data]);
 
   const options = {
-    scales: {
-      y: {},
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (chart: any) => {
+            return `${chart.raw.x}: ${chart.raw.r / 8} Movie(s)`;
+          },
+        },
+      },
     },
   };
 
@@ -47,7 +53,6 @@ function BubbleChart({}: Props) {
           ? moviesPerYear[movie.pub_date]++
           : (moviesPerYear[movie.pub_date] = 1);
       });
-      console.log(moviesPerYear);
       return {
         datasets: [
           {
