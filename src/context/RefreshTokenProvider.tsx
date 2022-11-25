@@ -24,7 +24,7 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
   );
 
   // Request interceptors
-  useEffect(() => {
+  useMemo(() => {
     // Mount the token on each authenticated request
     const reqInterceptor = privateAxiosInstance.interceptors.request.use(
       function (config) {
@@ -74,11 +74,6 @@ function RefreshTokenProvider({ children }: { children: React.ReactNode }) {
         return Promise.reject(error);
       }
     );
-
-    return () => {
-      privateAxiosInstance.interceptors.request.eject(reqInterceptor);
-      privateAxiosInstance.interceptors.response.eject(resInterceptor);
-    };
   }, [user]);
 
   let value = useMemo(() => privateAxiosInstance, []);
