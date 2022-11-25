@@ -30,19 +30,22 @@ function UserDropdown() {
       <MenuList>
         {user?.is_admin ? (
           <MenuGroup title="Admin">
-            <MenuItem>Administration</MenuItem>
+            <Link to="/admin">
+              <MenuItem>Administration</MenuItem>
+            </Link>
             <MenuDivider />
           </MenuGroup>
         ) : null}
 
-        <MenuGroup title={first_name ? first_name : email}>
-          <Link to="/profile">
-            <MenuItem>Profile</MenuItem>
-          </Link>
-          <MenuItem>Rentals</MenuItem>
-          <MenuDivider />
-          <MenuItem onClick={() => logout()}>Logout</MenuItem>
-        </MenuGroup>
+        {!user?.is_admin ? (
+          <MenuGroup title={first_name ? first_name : email}>
+            <Link to="/profile">
+              <MenuItem>Profile</MenuItem>
+            </Link>
+            <MenuDivider />
+          </MenuGroup>
+        ) : null}
+        <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </MenuList>
     </Menu>
   );

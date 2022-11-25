@@ -23,7 +23,7 @@ interface Props {
   onOpen: () => void;
   onClose: () => void;
   movie: IMovie | null;
-  request: () => void;
+  request: (values?: any) => void;
   loading: boolean;
 }
 

@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { styleConstants } from "../../theme/constants";
@@ -8,8 +8,9 @@ import Navbar from "./Navbar";
 type Props = {};
 
 function Layout({}: Props) {
+  const bg = useColorModeValue("white", "gray.900");
   return (
-    <Flex direction="column" minH="100vh" bg="blackAlpha.100">
+    <Flex direction="column" minH="100vh" bg={bg}>
       <Navbar />
       <Box flexGrow="1">
         <Outlet />

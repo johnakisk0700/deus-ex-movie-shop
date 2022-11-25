@@ -1,4 +1,4 @@
-import { RepeatIcon } from "@chakra-ui/icons";
+import { CheckIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -31,6 +31,7 @@ import { IMovie } from "../../routes/Home/Movie";
 import ReturnModal from "../../routes/Profile/ReturnModal";
 import { styleConstants } from "../../theme/constants";
 import PaginationButtons from "../Pagination/PaginationButtons";
+import { useAuth } from "../../context/AuthProvider";
 
 type Props = {};
 
@@ -63,6 +64,7 @@ const sortOptions = {
 
 function RentalsTable({}: Props) {
   const toast = useToast();
+  const { user } = useAuth();
 
   // Rentals table logic
   const { page_size, page, setPage } = usePagination();
@@ -117,11 +119,11 @@ function RentalsTable({}: Props) {
   };
 
   const tdHover = useColorModeValue("whiteAlpha.700", "black");
-
+  console.log(orderedRentals);
   return (
     <>
       <Flex justify="space-between" my={6}>
-        <Flex align="center" gap={2}>
+        <Flex align="center" gap={4}>
           <Select
             value={orderBy}
             onChange={(e) => setOrderBy(e.target.value as SortProperties)}
@@ -132,14 +134,16 @@ function RentalsTable({}: Props) {
               </option>
             ))}
           </Select>
-          <Switch
-            value={onlyActive ? "true" : "false"}
-            onChange={() => {
-              setPage(1);
-              setOnlyActive((prev) => !prev);
-            }}
-          />
-          <Text>Active Only</Text>
+          <Flex align="center" gap={2}>
+            <Switch
+              value={onlyActive ? "true" : "false"}
+              onChange={() => {
+                setPage(1);
+                setOnlyActive((prev) => !prev);
+              }}
+            />
+            <Text fontSize="xs">Active Only</Text>
+          </Flex>
         </Flex>
 
         {count && (
@@ -154,6 +158,7 @@ function RentalsTable({}: Props) {
         <Table size="sm">
           <Thead>
             <Tr>
+              {user?.is_admin ? <Th>User</Th> : null}
               <Th>Movie</Th>
               <Th isNumeric>Rental Date</Th>
               <Th isNumeric>Return Date</Th>
@@ -165,12 +170,13 @@ function RentalsTable({}: Props) {
             {!loading && orderedRentals
               ? orderedRentals.map((rental, i) => (
                   <Tr key={i} _hover={{ bg: tdHover }}>
+                    {user?.is_admin ? <Td>{rental.user}</Td> : null}
                     <Td>{rental.movie}</Td>
                     <Td isNumeric>{rental.rental_date}</Td>
                     <Td isNumeric>
                       {rental.return_date ? rental.return_date : "-"}
                     </Td>
-                    <Td isNumeric>{rental.is_paid ? "YES" : "NO"}</Td>
+                    <Td isNumeric>{rental.is_paid ? <CheckIcon /> : "-"}</Td>
                     <Td isNumeric>
                       <Button
                         variant="solid"

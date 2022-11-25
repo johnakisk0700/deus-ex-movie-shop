@@ -25,7 +25,7 @@ export const useRequest = <TData>(
 
   // turn it true again so that strict mode works
   const request = useMemo(
-    () => async () => {
+    () => async (values?: any) => {
       isMounted.current = true;
       const abortController = new AbortController();
       setLoading(true);
@@ -34,7 +34,7 @@ export const useRequest = <TData>(
         const res = await privateAxiosInstance({
           method: method,
           url: url,
-          data: postData,
+          data: values || postData,
           signal: abortController.signal,
         });
         if (isMounted.current) {

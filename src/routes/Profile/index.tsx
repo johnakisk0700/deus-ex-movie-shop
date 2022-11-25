@@ -11,7 +11,6 @@ function ProfilePage({}: Props) {
     <Container maxW="8xl">
       <ProfileCard />
       <RentalsTable />
-      <BubbleChart />
     </Container>
   );
 }

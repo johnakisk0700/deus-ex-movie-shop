@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 
@@ -9,14 +8,11 @@ function AuthGuard({
   children: JSX.Element;
   adminRoute?: boolean;
 }) {
-  let { user, setUser } = useAuth();
+  let { user, logout } = useAuth();
   let location = useLocation();
 
-  if (adminRoute && !user?.is_admin) {
-    console.error("Naughty Boy Detected!");
-    setUser(null);
-    localStorage.removeItem("user");
-    return <Navigate to="/login" />;
+  if (adminRoute && user && !user?.is_admin) {
+    return <Navigate to="/" replace />;
   }
 
   if (!user) {
