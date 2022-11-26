@@ -90,6 +90,9 @@ function Movies() {
   const movies = moviesRes?.results;
   const count = moviesRes?.count;
 
+  // used for skeletons
+  const fakeMovieArr = useMemo(() => Array(12).fill(0), []);
+
   // Info Modal
   const {
     isOpen: isOpenInfo,
@@ -204,7 +207,11 @@ function Movies() {
                 />
               </GridItem>
             ))
-          : null}
+          : fakeMovieArr.map((fakeMovie, i) => (
+              <GridItem key={i}>
+                <Movie loading={loading} />
+              </GridItem>
+            ))}
       </Grid>
       <Flex align="center" justify="space-between" my={6}>
         <FiltersDrawer>
