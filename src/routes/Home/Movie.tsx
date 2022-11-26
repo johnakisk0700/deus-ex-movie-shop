@@ -1,5 +1,6 @@
 import { TimeIcon, CalendarIcon, StarIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   ButtonGroup,
   Card,
@@ -16,6 +17,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { styleConstants } from "../../theme/constants";
 
 export interface IMovie {
   uuid: string;
@@ -44,14 +46,29 @@ function Movie({
   const bg = useColorModeValue("gray.50", "gray.700");
 
   return (
-    <Skeleton isLoaded={!loading} height="100%">
-      <Card minHeight="640px" height="100%" bg={bg}>
+    <Skeleton isLoaded={!loading}>
+      <Card height="664px" bg={bg}>
         <CardBody>
           <Image
             src={movie?.poster_url}
             height="256px"
             borderRadius="lg"
             mx="auto"
+            fallback={
+              <Flex
+                bg="black"
+                color="white"
+                height="256px"
+                width="168px"
+                mx="auto"
+                align="center"
+                justify="center"
+                textAlign="center"
+                borderRadius={styleConstants.borderRadius}
+              >
+                Image <br /> Not <br /> Available
+              </Flex>
+            }
           />
           <Stack mt="6" spacing="2.5">
             <Heading size="md" noOfLines={2} height="3rem">

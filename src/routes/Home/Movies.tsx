@@ -90,9 +90,6 @@ function Movies() {
   const movies = moviesRes?.results;
   const count = moviesRes?.count;
 
-  // used for skeletons
-  const fakeMovieArr = useMemo(() => Array(12).fill(0), []);
-
   // Info Modal
   const {
     isOpen: isOpenInfo,
@@ -196,14 +193,7 @@ function Movies() {
         }}
         gap={6}
       >
-        {loading
-          ? fakeMovieArr.map((_, i) => (
-              <GridItem key={i}>
-                <Movie loading={true} />
-              </GridItem>
-            ))
-          : null}
-        {movies && !loading
+        {movies
           ? movies.map((movie) => (
               <GridItem key={movie.uuid}>
                 <Movie
