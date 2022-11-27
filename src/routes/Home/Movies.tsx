@@ -278,7 +278,7 @@ function FiltersDrawer({ children }: { children: JSX.Element }) {
   return (
     <>
       <Button ref={btnRef} onClick={onOpen} variant="ghost" gap={1}>
-        <IoFilterSharp size="20px" />
+        <IoFilterSharp size="24px" />
         Filters
       </Button>
       <Drawer

@@ -14,6 +14,15 @@ export const useAxiosPrivate = () => {
     []
   );
 
+  const refreshAxiosInstance = useMemo(
+    () =>
+      axios.create({
+        baseURL: import.meta.env.VITE_PROXY_URL,
+        withCredentials: true,
+      }),
+    []
+  );
+
   // Request interceptors
   useEffect(() => {
     // Mount the token on each authenticated request
@@ -41,22 +50,28 @@ export const useAxiosPrivate = () => {
       },
       async function (error) {
         // if 401 try to refresh the token
-        let prevRequest = error.config;
-        if (error?.response?.status === 401 && !prevRequest?.sent) {
-          prevRequest.sent = true;
+        const prevRequest = error.config;
+        if (error?.response?.status === 401) {
           if (!user) {
             throw Error("Cannot refresh token without being logged in.");
           }
+
           // get the token
           console.log("Trying refresh...");
-          const res = await privateAxiosInstance.post("auth/refresh/", {
-            refresh: user.tokens.refresh,
-          });
+          const res = await refreshAxiosInstance.post(
+            "auth/refresh/",
+            {
+              refresh: user.tokens.refresh,
+            },
+            { headers: { Authorization: `Bearer ${user.tokens.access}` } }
+          );
+
           const newAccessToken = res.data.access;
           const newUser = {
             ...user,
             tokens: { ...user.tokens, access: newAccessToken },
           };
+
           // set user and new headers
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           setUser(newUser);
