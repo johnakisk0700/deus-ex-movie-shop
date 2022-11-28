@@ -60,6 +60,7 @@ function LoginForm({}: Props) {
                     type="text"
                     variant="outline"
                     required
+                    data-testid="username"
                   />
                   <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
@@ -80,6 +81,7 @@ function LoginForm({}: Props) {
                   type="submit"
                   colorScheme="brand"
                   width="full"
+                  id="submit-login"
                   isLoading={loading}
                   mt={6}
                   mb={6}

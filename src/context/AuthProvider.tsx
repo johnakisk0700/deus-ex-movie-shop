@@ -62,14 +62,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const toast = useToast();
   let navigate = useNavigate();
   let location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   // read localStorage on init to check for saved user
   useMemo(() => {
     const savedUser = localStorage.getItem("user");
-    const parsedUser = savedUser && JSON.parse(savedUser);
-    if (parsedUser) {
-      setUser(parsedUser);
+    try {
+      const parsedUser = savedUser && JSON.parse(savedUser);
+      if (parsedUser) {
+        setUser(parsedUser);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
@@ -105,6 +108,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       };
       setUser(newUser);
       // navigate back to where user came from
+      const from = location.pathname || "/";
       navigate(from, { replace: true });
     } catch (err: any) {
       if (err.response.status === 401) {
